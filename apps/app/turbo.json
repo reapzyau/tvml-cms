@@ -6,7 +6,22 @@
 			"dependsOn": ["^build"],
 			"inputs": ["$TURBO_DEFAULT$", ".env*"],
 			"outputs": [".next/**", "!.next/cache/**", "!.next/dev/**"],
-			"env": ["NEXT_PUBLIC_API_URL", "NEXT_PUBLIC_AUTH_URL"],
+			/**
+			 * A package-level `env` REPLACES the root task's list rather than
+			 * merging with it, so `API_URL` and `APP_URL` — declared on the root
+			 * `build` task precisely so they reach this build — are stripped
+			 * here unless they are named again. Dropping them is the silent
+			 * failure the root config warns about: `next.config.ts` reads
+			 * `API_URL` to derive `NEXT_PUBLIC_API_URL`, falls back to
+			 * `http://localhost:3001`, and the deployed app proxies every
+			 * `/api/*` call to the reader's own machine.
+			 */
+			"env": [
+				"API_URL",
+				"APP_URL",
+				"NEXT_PUBLIC_API_URL",
+				"NEXT_PUBLIC_AUTH_URL"
+			],
 			"passThroughEnv": [
 				"AGENT_BRIDGE_SECRET",
 				"AGENT_URL",
