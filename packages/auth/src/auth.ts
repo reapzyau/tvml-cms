@@ -11,6 +11,7 @@ import { SYNC_SCOPES } from "./scopes";
 import { notifySignedIn } from "./signed-in";
 import {
 	hasSignInAllowList,
+	hostedDomainRestriction,
 	isWorkspaceEmail,
 	primaryWorkspaceDomain,
 } from "./workspace";
@@ -25,7 +26,7 @@ if (env.google) {
 
 		accessType: "offline",
 
-		...(primaryWorkspaceDomain() ? { hd: primaryWorkspaceDomain() } : {}),
+		...(hostedDomainRestriction() ? { hd: hostedDomainRestriction() } : {}),
 	};
 }
 

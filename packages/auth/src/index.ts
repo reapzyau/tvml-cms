@@ -35,6 +35,7 @@ export {
 } from "./sso";
 export {
 	hasSignInAllowList,
+	hostedDomainRestriction,
 	isWorkspaceEmail,
 	primaryWorkspaceDomain,
 	workspaceDomains,

@@ -36,6 +36,25 @@ export function primaryWorkspaceDomain(): string | undefined {
 	return allowList().domains[0];
 }
 
+/**
+ * The `hd` value to send Google, or undefined to send none.
+ *
+ * `hd` is not a hint. Google refuses any account outside that hosted domain at
+ * its own sign-in screen, before this application's allow-list is ever
+ * consulted — so an address the allow-list admits is turned away by an error
+ * nothing in this codebase explains.
+ *
+ * It is therefore only safe to send when the allow-list is exactly one domain
+ * and nothing else. A second entry — another domain, or a single outside
+ * address like a contractor's — states that someone beyond the first domain is
+ * meant to get in, and `hd` would silently lock them out.
+ */
+export function hostedDomainRestriction(): string | undefined {
+	const { domains, addresses } = allowList();
+	if (domains.length !== 1 || addresses.length > 0) return undefined;
+	return domains[0];
+}
+
 export function hasSignInAllowList(): boolean {
 	const { domains, addresses } = allowList();
 	return domains.length > 0 || addresses.length > 0;
