@@ -34,6 +34,21 @@ function required(name: string): string {
 	return value;
 }
 
+/**
+ * eve normally reads a model's context window from the AI Gateway catalogue.
+ * An external model is not in that catalogue, so compaction cannot be compiled
+ * unless the window is declared here — the build fails outright otherwise.
+ *
+ * The default is deliberately low. Under-declaring makes eve compact earlier
+ * than it strictly must, which costs a little efficiency; over-declaring lets a
+ * request grow past what the provider accepts, which fails the turn. Raise it
+ * via AGENT_MODEL_CONTEXT_TOKENS once the real window for AGENT_MODEL_ID is
+ * known — the proxy's /v1/models does not report it.
+ */
+const CONTEXT_TOKENS = Number(
+	process.env.AGENT_MODEL_CONTEXT_TOKENS?.trim() || 128_000,
+);
+
 const provider = createOpenAICompatible({
 	name: "cli-proxy",
 	baseURL: required("AGENT_MODEL_BASE_URL"),
@@ -45,6 +60,8 @@ const provider = createOpenAICompatible({
 // write down, and fails with TS2742.
 const agent: AgentDefinition = defineAgent({
 	model: provider(required("AGENT_MODEL_ID")),
+	modelContextWindowTokens: CONTEXT_TOKENS,
+	compaction: { modelContextWindowTokens: CONTEXT_TOKENS },
 });
 
 export default agent;
