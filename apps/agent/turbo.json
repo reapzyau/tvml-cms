@@ -14,6 +14,9 @@
 			"persistent": true,
 			"passThroughEnv": [
 				"AGENT_BRIDGE_SECRET",
+				"AGENT_MODEL_API_KEY",
+				"AGENT_MODEL_BASE_URL",
+				"AGENT_MODEL_ID",
 				"AI_GATEWAY_API_KEY",
 				"BLOB_READ_WRITE_TOKEN",
 				"DATABASE_URL",
